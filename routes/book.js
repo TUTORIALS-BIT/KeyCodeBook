@@ -1,3 +1,1 @@
-/**
- * Acá van las rutas de book.
- */
+const book = require('../controllers/genre')
