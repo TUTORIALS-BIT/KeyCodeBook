@@ -78,3 +78,20 @@ exports.update = (req, res) => {
     )
 
 }
+
+/**
+ * Método para obtener todos los usuarios.
+ * @param {*} req => Todo lo que enviamos desde el body (formulario) o url.
+ * @param {*} res => La respuesta que se devolverá
+ */
+exports.getAll = (req, res) => {
+    UserModel.find()
+        .then( (users) => { res.send(users) } )
+        .catch(
+            (error) => {
+                res.status(500).send({
+                    message: error.message
+                })
+            }
+        )
+}
