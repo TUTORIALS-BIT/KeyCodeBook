@@ -7,13 +7,13 @@ const app = express() //Se convierte a la constate express en un objeto, por el 
 
 app.use(cors())
 app.use(bodyParser.json())
-
+const port = process.env.PORT || 3000
 conectDB()//Estamos ejecutando el modulo de nuestra conexión a la base de datos.
 
 require('./routes/user')(app)
 require('./routes/genre')(app)
 require('./routes/book')(app)
 
-app.listen(3000, () => {
+app.listen(port, () => {
     console.log('Se levanto el servidor....')
 })
