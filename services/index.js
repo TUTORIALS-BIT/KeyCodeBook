@@ -1,6 +1,7 @@
 const jwt = require('jwt-simple')
 const moment = require('moment')
-const SECRET = 'KeycodeSecretTokenUser'
+const config = require('../config')
+const SECRET = config.keyToke
 
 exports.createToken = (dataUser) => {
     const payload = {

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose') //Paquete que permite la comunicación con nuestra base de datos.
+const config = require('./config')
 
 const conectDB = () => {
     /*
@@ -6,7 +7,7 @@ const conectDB = () => {
     -- useNewUrlParser: Analizar la información que se le quiere envíar a mongoDB.
     -- useUnifiedTopology: Escuchar los llamados que hacemos a mongoDB y monitorea que es lo que pasa.
      */
-    mongoose.connect('mongodb+srv://userAdminBook:testBITBook@proyectobit.3pvug.mongodb.net/KeyCodeBook?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true }, (error) => {
+    mongoose.connect(config.mongoDB, { useNewUrlParser: true, useUnifiedTopology: true }, (error) => {
         if(error){
             console.log('Error: ', error)
         }else{
