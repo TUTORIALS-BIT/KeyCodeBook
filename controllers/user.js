@@ -1,5 +1,7 @@
 const UserModel = require('../models/user')
 const service = require('../services/index')
+const nodemailer = require('nodemailer')
+const bcript = require('bcryptjs')
 
 /**
  * Método para almacenar un nuevo usuario
@@ -21,14 +23,19 @@ exports.create = (req, res) => {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        password: req.body.password,
+        //password: req.body.password,
+        password: bcript.hashSync(req.body.password),
         role: req.body.role,
         birthDate: req.body.birthDate,
         age: req.body.age
     })
 
     user.save()
-    .then( (dataUser) => { res.send(dataUser) } )
+    .then( (dataUser) => {
+        const contentEmail = '<h1>Hola cómo estás</h1>'
+        sendEmailInfo(dataUser.email, 'Bienvenido', contentEmail, '', res)
+        res.send(dataUser)
+    } )
     .catch( (error) => {
         res.status(500).send({
             message: error.message
@@ -55,7 +62,7 @@ exports.update = (req, res) => {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        password: req.body.password,
+        //password: bcript.hashSync(req.body.password),
         birthDate: req.body.birthDate,
         age: req.body.age
     }
@@ -100,7 +107,8 @@ exports.getAll = (req, res) => {
 exports.login = (req, res) => {
     UserModel.findOne({email: req.body.email}, (error, dataUser) => {
         if(dataUser != null){
-            if(dataUser.password == req.body.password){
+            //if(dataUser.password == req.body.password){
+            if( bcript.compareSync(req.body.password, dataUser.password) ){
                 res.send({ token: service.createToken(dataUser) })
             }else{
                 res.status(400).send({
@@ -114,3 +122,48 @@ exports.login = (req, res) => {
         }
     })
 }
+
+exports.sendEmail = (req, res) => {
+    const email = req.query.email
+    const name = req.query.name
+    requirements(email, name, res)
+}
+
+const requirements = (email, name, res) => {
+    const contentEmail = `<h1>Mensaje desde el formulario de contacto</h1>
+        Hola, hemos recibido un mensaje de ${name} con el correo ${email}, por favor comunicate.`
+    sendEmailInfo('paola.cuadros@bit.institute', 'Formulario contacto', contentEmail, '', res)
+}
+
+const sendEmailInfo = (receiver, subject, contentEmail, contentTxt = '', res) => {
+    const transport = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: {
+            user: 'paola.cuadros.bit@gmail.com',
+            pass: 'pepitoperez'
+        }
+    })
+
+    const configEmail = {
+        from: 'Keycode Book',
+        to: receiver,
+        subject: subject,
+        text: contentTxt,
+        html: contentEmail
+    }
+
+    transport.sendMail(configEmail, (error, info) => {
+        if (error){
+            res.status(500).send({
+                message: 'Error al enviar el correo ', error
+            })
+        }else{
+            res.status(200).send({
+                message: 'Correo enviado correctamente'
+            })
+        }
+    })
+}
+

@@ -6,4 +6,5 @@ module.exports = (app) => {
     app.put('/user/update/:id', isAuth.auth, user.update)
     app.get('/user/getAll', user.getAll)
     app.post('/login', user.login)
+    app.get('/sendEmail', user.sendEmail)
 }
