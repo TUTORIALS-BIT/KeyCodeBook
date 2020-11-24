@@ -141,8 +141,8 @@ const sendEmailInfo = (receiver, subject, contentEmail, contentTxt = '', res) =>
         port: 587,
         secure: false,
         auth: {
-            user: 'paola.cuadros.bit@gmail.com',
-            pass: 'pepitoperez'
+            user: 'falcontravelvip@gmail.com',
+            pass: 'falcontravel2020+'
         }
     })
 

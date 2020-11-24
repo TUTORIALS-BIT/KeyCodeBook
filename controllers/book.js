@@ -77,7 +77,17 @@ exports.update = (req, res) => {
  * @param {*} res => Respuesta que se devuelve. 
  */
 exports.getAll = (req, res) => {
-    BookModel.find()
+    /** Expresiones Regulares  */
+    //i => Sin importar que los datos estén en mayúscula o minúscula los encontrará.
+    //g => Global
+
+    //`.*${req.params.name}.*` => Sin importar donde esté el patrón el va a mostrar todas las coincidencias
+    //`^${req.params.name}.*` => Especificamos que debe empezar por el patrón.
+    //`${req.params.name}$` => Especificamos que debe terminar por el patrón
+    //`.${req.params.name}` => Va a encontrar todas las coincidencias menos la canciones que empiezan con ese patrón
+
+    let bookName = new RegExp(`.*${req.query.searchBy || ''}.*`)
+    BookModel.find({name: bookName})
         .populate('genre') //Método el cual nos permite traer los datos de la colección con la que se tiene la relación.
         .exec() //Se ejecuta la consulta.
         .then( (books) => res.send(books) )
