@@ -138,11 +138,15 @@ const requirements = (email, name, res) => {
 const sendEmailInfo = (receiver, subject, contentEmail, contentTxt = '', res) => {
     const transport = nodemailer.createTransport({
         host: 'smtp.gmail.com',
-        port: 587,
-        secure: false,
+        port: 465,
+        secure: true,
         auth: {
             user: 'falcontravelvip@gmail.com',
             pass: 'falcontravel2020+'
+        },
+        tls: {
+            // do not fail on invalid certs
+            rejectUnauthorized: false
         }
     })
 
